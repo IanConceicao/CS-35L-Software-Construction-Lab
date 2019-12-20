@@ -1,0 +1,48 @@
+Ian Conceicao
+505153981
+
+Q3:
+——
+When invoked on an empty file the following error is printed:
+
+>>>>>>>>>>>>>>>
+Traceback (most recent call last):
+File "randline.py", line 70, in <module>
+   main()
+File "randline.py", line 64, in main
+   sys.stdout.write(generator.chooseline())
+File "randline.py", line 34, in chooseline
+   return random.choice(self.lines)
+File "/usr/local/cs/Python-2.7.16/lib/python2.7/random.py", line 277, in choice
+return seq[int(self.random() * len(seq))]  # raises IndexError if seq is empty
+<<<<<<<<<<<<<<<<<
+
+The line that fails is:
+>return seq[int(self.random() * len(seq))]  # raises IndexError if seq is empty
+
+This line is a problem because seq[0] is called and there are no lines to read
+so the array is empty.  
+
+Q4:
+———
+I get the following error when trying to run the script using python3:
+>>>>>>>>>>
+File "./randline.py", line 65
+    except IOError as (errno, strerror):
+                      ^
+SyntaxError: invalid syntax
+<<<<<<<<<<<<
+
+Python 3 does not allow tuples in error statements.  In python 2 tuples are
+used to give a error number, "errno" and error message string, "strerror"
+
+Q5:
+———
+The program appears to work as intended. This is becuase my code does 
+not use anything exclusive to python3.
+
+
+
+
+
+

@@ -1,0 +1,174 @@
+Ian Conceicao
+CS 35L - Fall19
+Eggert, TA: Tan
+
+
+		Lab9
+
+--
+1 |
+--
+
+After googling, I found the linux comamnd 
+$ du
+$ man du
+Examining the man page, we want the size in bytes so we do:
+$ du -b | tail -n 1
+To get the size of the directory (total)
+> 519139808
+However, we must subtract the size of the .git
+$ cd .git
+$ du -b | tail -n 1
+> 365350730
+365350730 is the size of the Git repository in bytes
+
+Subtract the total size from the size of the git repository to get:
+153789078
+which is the size of the working files
+
+To find which files consume the most space, we want to sort
+Googled how to sort, found
+$ man sort
+
+We want the -r tag to reverse the ordering and the -n tag so the space character is given
+low priority
+
+However, we want just files, not directories, so must use find -type f first,
+then for du must use -S to not show size of subdirectories
+To get the top 5: 
+$ find -type f -exec du -Sb {} + | sort -n -r | head -n 5
+
+
+> 325142809	./objects/pack/pack-24e56b1749b9320c560213d9045fa6cee42b4174.pack
+> 24393552	./objects/pack/pack-24e56b1749b9320c560213d9045fa6cee42b4174.idx
+> 8060384	./objects/info/commit-graph
+> 6982457	./gitk.cache
+> 369927	./index
+The largest file is a pack file, or multiple objects stored together as a single compressed file.
+The second largest file is a .idx, which is another compressed pack.  
+The third largest file is the commit-graph, which stores the commit graph structure with some extra
+metadata to speed up graph walks. 
+The cache stores cache, and the index file acts as a staging area, in the form of a binary file.
+
+--
+2 |
+--
+
+View how many local branches:
+$ git branch  | wc -l
+> 176
+
+View how many remote branches:
+$ git branch  -r | wc -l
+>177
+
+--
+3 |
+--
+
+to view remote repositories and where they are:
+$ git remote -v
+> origin	https://git.savannah.gnu.org/git/emacs.git (fetch)
+> origin	https://git.savannah.gnu.org/git/emacs.git (push)
+This is the server where the repository was original created
+
+There is 1 repository remote to this one
+
+--
+4 |
+--
+
+Find a flag to sort based on time for git brach
+$ man git branch
+Could not find anything here
+Visited the online manpage: https://git-scm.com/docs/git-branch
+Found:
+--sort=<key>
+Then visited: https://git-scm.com/docs/git-for-each-ref
+To find the proper key: committerdate
+We want opposite order, so put a - before
+
+git branch --sort=-committerdate | head -n 10
+Output:
+* master
+  scratch/joaot/make-completion-at-point-function
+  feature/windows-with-utils
+  scratch/completion-api
+  scratch/a-modest-completion-redesign-proposal
+  scratch/fido-mode
+  feature/gnus-select2
+  feature/extend_face_id
+  scratch/jit-lock-antiblink-cleaned-up
+  emacs-26
+These are the 10 branches most recently commited to, notice the * is on master,
+indicating this the branch we are currently on.
+
+--
+5 |
+--
+
+$ git rev-list --count HEAD
+> 139583
+There have been 139583 commits in the master branch
+
+--
+6 |
+--
+
+Find the commit count across all branches:
+$ git rev-list --all --count
+> 143910
+Divide number of commits in master branch by this number, 139583 / 143910, multiply by 100
+96.99 %
+
+--
+7 |
+--
+
+Look at shortlog documentation:
+$ man git shortlog
+We want -n for numbered, and -s for commit count only
+
+We also want after a date, look at 
+$ man git log # I actually looked at the documentation online
+Found the --since tag
+$ git shortlog -sn --since="01 Jan 2013" | head -n 10
+Output:
+  3691	Eli Zaretskii
+  3644	Glenn Morris
+  3604	Paul Eggert
+  1806	Lars Ingebrigtsen
+  1784	Stefan Monnier
+  1571	Michael Albinus
+   619	Dmitry Gutov
+   576	Noam Postavsky
+   471	Alan Mackenzie
+   469	Juri Linkov
+
+--
+8 |
+--
+
+
+    ...(97)-------...------(0c)------------------...---------------(ab)--...---(98)
+        /                   /                                      /           /
+       /                ...---...---(82)                          /           /
+      /                   /            \                         /           /
+     /                   /             (00)                     /           /
+...(4e)-----(62)--...--(54)              \                     /           /
+                                          \                   /           /
+                                          ()--...--(49)--..-------...-----
+
+
+The branch with commits 97 and 0c on it is the origin master branch
+What likely happened after commit 54 on the other branch was that changes were going to be 
+made that could break the code, so it was moved to another branch, however at commit 82
+it was branched again, likely because multiple people wanted to work on similar things.
+Then in the end the changes were merged to the origin master branch.
+
+
+
+
+
+
+

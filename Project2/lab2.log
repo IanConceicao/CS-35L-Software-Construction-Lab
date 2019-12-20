@@ -1,0 +1,102 @@
+Ian Conceicao 505153981
+CS 35L - Eggert
+Fall 2019
+
+Log 2
+
+Set locale to standard C
+
+Obtained words file on local computer using curl.  Used sort command to 
+sort the file. 
+
+HTML Assignment 2
+
+TR Outputs:
+tr -c 'A-Za-z' '[\n*]' < Assign2.html
+	-Outputted all the letters of the html file
+tr -cs 'A-Za-z' '[\n*]' < Assign2.html
+	-Outputs all the letters of the html but do not repeat multiple empty 
+lines, only one
+tr -cs 'A-Za-z' '[\n*]' < Assign2.html | sort
+	-Same as last output but in alphabetical order
+tr -cs 'A-Za-z' '[\n*]' < Assign2.html| sort -u
+	-Same as last, but do not repeat words
+tr -cs 'A-Za-z' '[\n*]' < Assign2.html | sort -u | comm - words
+	-Outputs contents of the webpages into 3 columns, the first being lines 
+only in Assign2,
+	the second lines that are only in words, the third, lines that are in both
+tr -cs 'A-Za-z' '[\n*]' < Assign2.html | sort -u | comm -23 - words 
+	# ENGLISHCHECKER
+	-Hides columns 2 and 3, only showing words that are in the webpage, but
+ not the words file
+
+Download webpage using wget: https://www.mauimapp.com/moolelo/hwnwdshw.htm
+
+#!/bin/bash                                                                   
+#Remove spaces at the start of each line                                      
+sed 's/^ *//g' |
+
+#grab all lines inside the tables:                                            
+grep -E '<td>.+</td>' |
+
+#Take care of the double hawaiin word problem                                 
+sed 's/<td>Kahak<u>o<\/u><\/td>/&\n/' |
+
+#Delete every other one (the English ones):                                   
+sed -n '3~2p' |
+
+#Replace ASCII grave accent with AscII apostrophe:                            
+sed "s/\`/\'/g" |
+
+#Delete all tags :                                                            
+sed 's/<[^>]*>//g' |                                                         
+
+#Make uppercase to lowercase:                                                 
+tr [:upper:] [:lower:] |
+
+#Make spaces or commas be  treated as new words:                              
+sed 's/[, ]/\n/g' |
+
+#remove empty lines
+sed -r '/^\s*$/d' |
+
+#Sort the words:                                                              
+sort -u
+
+#END  
+
+Give user permission to execute buildwords
+Use buildwords on hwnwdshw.htm and put into hwords:
+cat hwnwdshw.htm | ./buildwords | less > hwords
+
+Command to check hawaii'n words:
+cat testMe | tr -cs "A-za-z'" '[\n*]' | sort -u | comm -23 - hwords | wc -l 
+
+When compared with hwords itself,
+cat hwords | tr -cs "A-za-z'" '[\n*]' | sort -u | comm -23 - hwords | wc -l 
+Says there 1 is misspelled word: kahiki.  This is due to the word Hala-kahiki
+having a hyphen, which is not allowed in the hawaiian alphabet according
+to the specs.
+
+Assign 2 webpage compared with english:
+cat Assign2.html | tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - words 
+| wc -l # ENGLISHCHECKER
+Says there are 94 words that are not in english
+
+Assign 2 webpage compared with Hawaiin:
+cat Assign2.html | tr -cs "A-za-z'" '[\n*]' | sort -u | comm -23 - hwords 
+| wc -l 
+Says there are words that are 614 words not in Hawaiin
+
+Check amount of words english checker says is mispelled, but hawaiian checker 
+does not cat Assign2.html | tr -cs "A-za-z'" '[\n*]' | sort -u | comm -12
+- hwords | tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - words | wc -l 
+2 words, including
+lau and wiki
+
+Check amount of words hawaiian checker says is misspelled but english says 
+is not
+
+cat Assign2.html | tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -12 - words 
+| tr -cs "A-za-z'" '[\n*]' | sort -u | comm -23 - hwords | wc -l 
+508 words, including, able and Here

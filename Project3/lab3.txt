@@ -1,0 +1,146 @@
+Ian Conceicao
+CS 35L TA Tan
+Fall quarter 2019
+
+Lab 3 log
+
+Step 1: Getting Set Up
+——————
+
+Downloaded Coreutils 8.29 source code and its signature
+
+$ wget https://ftp.gnu.org/gnu/coreutils/coreutils-8.29.tar.xz
+$ wget ftp://ftp.gnu.org/gnu/coreutils/coreutils-8.29.tar.xz.sig
+
+Download GNU keyring
+$ wget https://ftp.gnu.org/gnu/gnu-keyring.gpg
+
+A warning message prints:
+
+gpg: WARNING: This key is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+
+
+The warning is fine, it only says there is no evidence the signature belongs 
+to the owner.
+
+
+Verify the signature using GNU keyring
+$ gpg --verify --keyring ./gnu-keyring.gpg coreutils-8.29.tar.xz.sig
+
+
+Untared and unzipped coreutils
+$ tar -xJvf coreutils-8.29.tar.xz
+
+Made a directory ~/coreutilsInstall in the home directory
+
+Step 2: Building coreutils
+——————
+
+Went into coreutils-8.29 directory to read how to configure the make file
+$ cd coreutils-8.29
+$ emacs INSTALL
+$ ./configure --prefix=/u/cs/ugrad/conceica/coreutilsInstall
+
+Next use the make command to compile the program and the make install comamand 
+to put the files in the correct spot.
+
+$ make
+$ make install
+
+Step 3: Reproducing the Bug
+——————
+
+Ran the coreutils verions of ls:
+$ cd ~/coreutilsInstall
+$ ./bin/ls -a -A
+
+Output:
+> .  ..  bin  libexec  share
+
+. and .. show that the ls command is bugged
+
+Step 4: Patching and Building
+—————
+
+Go to coreutils file create patch file:
+$ cd ~/coreutils-8.29
+$ emacs patch_file
+I copied and pasted the patch content into the patch file
+
+Figured out which num flag to add to patch -pnum < patch_file by 
+looking at man patch
+
+$ man patch
+
+The num 1 flag is the best implementation for me because I do not have 
+the a and b directories that are in the patch file.  The 1 flag strips
+the prefixes of directories a and b, I am working the same directory.
+
+$ patch -p1 < patch_file
+
+The only error that was printed:
+
+Hunk #1 FAILED at 4.
+> 1 out of 1 hunk FAILED -- saving rejects to file NEWS.rej
+
+But it did patfch the file:
+> patching file src/ls.c
+
+and later it said that Hunk #1 suceeded with an offset of 3 
+lines
+> Hunk #1 succeeded at 1900 (offset -3 lines).
+
+Step 5: Building
+—————
+execute the make command to rebuild 
+$ make
+
+I didn't install so in the next step we can test the difference 
+between the pre patch and post patch versions
+
+Step 6: testing Fix
+—————
+
+Test the post patch version
+$ cd src
+$ ./ls -a -A
+
+. and .. did not print, the patch worked
+
+$ cd ~/coreutilsInstall
+$ ./bin/ls -a -A
+
+. and .. still print as expected
+
+Q1:
+———
+The patch improves the performance of ls because it removes the if 
+statement:
+
+         case 'A':
+-          if (ignore_mode == IGNORE_DEFAULT)
+-            ignore_mode = IGNORE_DOT_AND_DOTDOT;
++          ignore_mode = IGNORE_DOT_AND_DOTDOT;
+           break;
+Less conditional branches means better performance.
+
+Q2:
+——
+Now people at the company need to be concerned about the order of the 
+flags -A and -a.  Programs that were written earlier, that were not 
+concerned about the order may have bugs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

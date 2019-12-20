@@ -1,0 +1,35 @@
+#!/bin/bash
+#Remove spaces at the start of each line
+sed 's/^ *//g' |
+
+#Remove all ?
+sed 's/?//g' |    
+    
+#grab all lines inside the tables: 
+grep -E '<td>.+</td>' |
+
+#Take care of the double hawaiin word problem
+sed 's/<td>Kahak<u>o<\/u><\/td>/&\n/' |
+
+#Delete every other one (the English ones): 
+sed -n '3~2p' |
+
+#Replace ASCII grave accent with AscII apostrophe:
+sed "s/\`/\'/g" |    
+
+#Delete all tags : 
+sed 's/<[^>]*>//g' |
+
+#Make uppercase to lowercase:
+tr [:upper:] [:lower:] |
+
+#Make spaces or commas be  treated as new words: 
+sed 's/[, ]/\n/g' |
+
+#remove empty lines
+sed -r '/^\s*$/d' |
+
+#Sort the words: 
+sort -u
+
+#END

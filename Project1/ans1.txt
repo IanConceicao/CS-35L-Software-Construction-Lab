@@ -1,0 +1,82 @@
+1.
+man - k <keyword> (inspected man man and found -k flag)
+2. 
+mv is located at /usr/bin/mv
+cp is located at /usr/bin/cp
+Commands:
+whereis mv
+whereis cp
+3. 
+pr: convert text files for printing
+tr: translate or delete characters
+Commands:
+find /usr/local/cs/bin -executable -name "?r"
+man pr
+man tr
+4.
+/usr/bin/emacs-24.3
+Commands:
+readlink -f /usr/bin/emacs
+5.
+gcc is 9.2.0
+/usr/bin/gcc is 4.8.5 20150623 (Red Hat 4.8.5-39)
+They are different versions because gcc is a symbolic link and /usr/bin/gcc is the executable
+6.
+U+sx,o-w
+Set owner (user) execution permissions and set user id bit
+Remove writing permissions from others
+7.
+commands:
+find /usr/local/cs/bin -executable -name "?r"
+8.
+280
+commands:
+whereis find 
+find /usr/bin -type l | wc -l
+9.
+librom1394.so.0.3.0
+
+
+Commands
+ls /usr/lib64 -atr | head -n 1
+10.
+/usr/lib/locale
+The man 7 section of locpath titled environment describes if locpath is not set, the default directory to gather data is /usr/lib/locale 
+commands:
+man locale
+man 7 locale
+echo $LOCPATH
+11.
+downcase-dwim, downcase-region, and downcase-word
+Commands:
+<C-h> a downcase
+12.
+<C-M-r>
+isearch-backward-regexp. Performs an incremental search backward for regular expression.  
+<C-M-s> 
+isearch-forward-regexp. Does an incremental search forward for regular expressions.
+<C-M-t>
+transpose-sexps. Like transpose chars but applies to sexps.
+<C-M-u>
+command backward-up-list. Move backward out of one level of parentheses.
+<C-M-v> 
+Scroll-other-window. Scroll to the next window upward ARG lines or near full screen if no ARG.
+Commands:
+<C-h>  k <CommandsToKnow> 
+13.
+The emacs help page says, "C-g runs the command keyboard-quit (found in global-map), which is an interactive compiled Lisp function in 'simple.el'. It is bound to C-g. (keyboard-quit) Signal a 'quit' condition. During executiuon of Lisp code, this character causes a quit directly. At top-leve, as an editor command this simply beeps."
+Commands:
+<C-h> k <C-g>
+14.
+Via the emacs helpage
+"is an interactive compiled Lisp function in 'simple.el'. It is bound to C-y, <S-insertchar>, <S-insert>, <menu-bar> <edit> <paste>. (yank &optional ARG) Reinsert ("paste") the last stretch of killed text.  More precisely, reinsert the most recent kill, which is the stretch of killed text most recently killed OR yanked."
+Commands:
+<C-h> k yank
+<C-x> O
+Click enter on yank
+15.
+ls l prints out information about files in a specific directory.  The emacs command gives an interface to navigate around files and the ability to edit a file.
+Commands:
+cd /usr/bin
+ls -l 
+emacs dired

@@ -1,0 +1,122 @@
+#!/bin/bash                                                          
+
+#Set directory as arg                                                
+D=$2 #Directory passed in                                           
+
+#If D is not a directory                                             
+if [ ! -d "$D" ]
+   then
+       >&2 echo 'Argument 2 must be a directory'
+       exit 1 #Terminate and give an error                         
+fi
+
+#If we are given 3 or more operands
+if [ ! -z "$3" ]
+   then
+       >&2 echo 'Too many arguments'
+       exit 1
+fi
+
+#If we are given 0 operands
+if [ -z "$1" ]
+then
+    >& echo 'Not enough arguments'
+    exit 1
+fi
+
+#If given one operand
+if [ -z "$2" ]
+   then
+       D="$PWD" #Set D to .
+fi
+
+#If first arg is not -r
+if [ ! "$1" = "-r" ]
+then
+    >& echo "first argument must be '-r'"
+fi
+
+#If directory is not readable
+if [ ! -r $D ]
+then
+    >&2echo "Unable to read directory $D"
+    exit 1
+fi
+
+#If given directory's first character is '-'
+if [ ${D:0:1} = '-' ]
+   then
+       >&2 echo "The directory you pass cannot start with '-'"
+       exit 1
+fi
+
+#If given directory does not have '/', add it
+Dlen=${#D}-1
+if [ ! ${D:$Dlen:1} = '/' ]
+   then	    
+      D="$D/"
+fi
+
+#Count number of files
+#numFiles="$(find $D -type f | wc -l)"
+output=0
+hits=0
+name=""
+#iterate through num of files
+for i in $D*
+do
+    #If its a directory, call the function for it as an arg and continue
+    if [ -d "$i" ]
+    then
+	./poornamesr "$-r" "$i"
+    fi
+    
+    #Filename looks like: Ds/former/path/filename
+    #We want to get rid of D's path and only keep filename to examine
+    output=0
+    Dsize=${#D}
+    len=${#i}-$Dsize
+    name=${i:$Dsize:$len}
+    #Now we have just the filename
+    
+    hits=0
+    hits=$(find $D -maxdepth 1 -iname "$name" | wc -l)
+
+    if [ $hits -gt 1 ]
+    then
+	output=1
+    fi
+
+    if [ ! "$name" = "*" ]
+    #If it doesn't meet guidelines
+    then
+    if [ ${#name} -gt 14 ]
+    then
+	output=1
+    elif [ ${#name} -lt 1 ]
+    then
+	output=1
+    elif [ ${name:0:1} = '-' ]
+    then
+	output=1
+    elif [ ${name:0:1} = '.' ]
+    then
+	output=1
+    elif echo "$name" | grep -Eq '[^A-Z,a-z,.,\-,_]' 
+    then
+	output=1
+    fi
+    fi
+
+    #If a condition was met 
+    if [ $output = 1 ]
+    then
+       echo "$D$name"  
+    fi    
+done
+
+
+
+
+
+    

@@ -1,0 +1,38 @@
+10.97.85.180
+Roberts IP: 10.97.85.216
+The key fingerprint is:
+3f:e1:4b:28:79:82:bc:ab:46:aa:d4:83:75:5b:f5:6b root@beaglebone
+The key's randomart image is:
++---[RSA 2048]----+
+|            192     |
+|                 |
+|         .       |
+|        . .      |
+|   . . .S ..     |
+|  =...o. + ..    |
+| = oo.+ o =E     |
+|o . .. + ..o     |
+|o...o.    .      |
+
+Generated key:
+
+The key fingerprint is:
+12:f0:90:14:b8:33:93:b3:ff:38:72:12:2e:d1:e4:73 Ian@204996814.lasr.cs.ucla.edu
+The key's randomart image is:
++---[RSA 2048]----+
+|   o=o           |
+|  . .+           |
+|   o  o          |
+|  O    .         |
+| + *  . S        |
+|. * E  .         |
+| o =             |
+|. + +.           |
+| . +.o.          |
++-----------------+
+
+
+Had to download x11 package for debian gnu linux:
+
+apt-get install x11-apps
+

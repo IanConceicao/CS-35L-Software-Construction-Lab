@@ -1,0 +1,148 @@
+Ian Conceicao
+CS 35L - Fall 2019
+Eggert, TA: Tan
+
+
+		Lab 8
+
+SET UP
+—————–
+
+I connected the beagle bone green wireles to my windows device by connecting
+a USB to a USB port and a micro usb on the other end to the beagle bone. I located
+the beagle bone under storage devices in the windows file explorer.  I opened the device
+and click on "START.htm", launching a webpage in chrome.  There I downloaded drivers
+(64 bit) to my device. I launched to driver install and it failed. I took the following
+steps to fix it:
+-Restarted computer while holding down the shift key
+-Clicked on "Troubleshoot"
+-Selected "Advanced Options"
+-Selected "Startup Seetings"
+-Pressed 7
+-Clicked restart
+
+Then I opened the driver install and the drivers installed.
+Next I installed Putty, a free SSH client for windows.  The client runs Debian 
+GNU/Linux 8.0. I launched Putty, and under hostname put "192.168.7.2".  I saved
+this IP so I would not have to manually enter it each time.  Prompted for a username
+I put "root". Then I was in the root directory.
+
+To connect to wifi I used the command:
+connmanctl
+Under connmanctl I entered the following:
+connmanctl > enable wifi
+to enable wifi.
+Then I entered:
+connmanctl> scan wifi
+to scan all available wifi access points.  I entered then:
+connmanctl> services
+To see the wifi access point to connect to for each wifi.
+I registered as the prospective client by entering:
+connmanctl> agent on
+I connected to CR3760-wifi wifi_506583d4fc5e_544e434150413937414239_managed_psk 
+by using the command:
+connmanctl> connect CR3760-wifi wifi_506583d4fc5e_544e434150413937414239_managed_psk
+Prompted for a passphrase I entered: 
+3760ClassNet
+then I quit the application connmanctl:
+connmanctl> quit
+
+Then I updated the databse of apt-get by entered the following series of commands:
+sudo apt-get update
+sudo apt-get install xauth
+sudo apt-get install xvfb
+
+Then I downloaded XMing for windows.  I googled XMing download and downloaded the
+first 64 bit version.  I installed X11.
+
+
+___________________
+Setting up accounts and servers
+___________________
+
+My partner followed similar steps for the set up. We then both found out
+our ip addresses by typing:
+ifconfig
+When under the root directory in our beagle bone using the putty interface.
+The final section of code had a string prepending by: "inet addr" The following
+string that consists of numbers and dots (.) was the beagle bone's IP address.
+
+Then my partner and I created accounts for ourselves, I made an account for
+him on my machine, and he made an account for him on his machine (beagle bone). 
+sudo useradd -d /home/robert -m robert
+sudo passwd robert
+I then set the password "111111" or six 1's
+then I switched to the directory I just created:
+cd /home/robert
+I created a .ssh directory for robert:
+sudo mkdir .ssh
+I changed ownership and permission on the .ssh directory so my partner could modify
+the contents of the directory
+sudo chown -R robert .ssh
+sudo chmod 700 .ssh
+
+My partner did the same on his beagle bone but made the directory title Ian and
+the password was "123456"
+
+Then I generated keys.
+ssh-keygen
+I chose no passprhase, by entering empty strings twice
+Copied the keys to server
+ss-copy-id -i Ian@10.97.85.216
+
+I connected to the account my partner made by using the command:
+ssh Ian@10.97.85.216
+The ip I aquired by asking him. 
+When prompted, I typed in the password, "123456"
+
+For passphrase-less authentication I used ssh-agent
+eval $(ssh-agent)
+ssh-add
+
+Now I was setup to connect to his server without a password.
+
+—————
+xeyes
+————
+I downloaded the x11 apps package by navigating off the server, back to my
+root and entering:
+apt-get install x11-apps
+This downloaded and installed x11 apps, including xeyes.
+I had to click Y to agree to a few terms.nctl:
+However it did not download the last part, so I switched back to UCLA
+web wifi, using steps very similar to how I orignally connected to the
+CR3760 wifi in the first place.  Then I repeated the steps to download the 
+x11 apps and this time it downloaded.  I switch back to the CR3760 using the same
+steps as I did the first time.  My partner did the same thing on his machine.
+Now I ssh'd into the account on his computer:
+ssh -X Ian@10.97.85.216
+The X tag allows graphical interfaces to be imported back to the calling
+machine (my machine). 
+Once connecting (I did not have to enter a password), I typed the command:
+xeyes
+and the xeyes application opened on my device.  I noticed it was significantly
+"laggier" then if I ran the application on my own device, with noticable delay
+of the eyes reacting to mouse movement.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

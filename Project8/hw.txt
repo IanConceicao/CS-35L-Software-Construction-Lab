@@ -1,0 +1,33 @@
+Ian Conceicao
+CS 35L Fall 2019
+
+
+
+			hw9.txt
+
+
+1
+——
+
+The resulting communication would still be secure even if a team was observing
+all the bytes going across the network.  The secure shell (SSH) uses a one-time-
+session key for encryption.  
+
+(1)
+The network would still be secure because the authentication is password, and thus
+keystroke free.  
+
+(2) 
+If another team had access to the USB we were booting off of, then they would be
+able to access the .ssh file that was created, revealing our private key. With the
+private key they could login to the server. 
+
+2
+——
+gpg2 --verify does not really verify that the file in question was personally created
+by me, but instead compares the file to a detached signature and checks if they match.
+An attacker could modify the file and create a separate detached signature. If checked,
+the file and signature still would match, but not actually show that I signed the file.
+
+The issued could be fixed by hosting the signatures on another provider, such as to a
+Certificate Authortiy. A (CA) is an entity that issues digital certificates.  
